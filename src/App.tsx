@@ -2,6 +2,7 @@ import { createSignal } from "solid-js";
 import logo from "./assets/logo.svg";
 import { invoke } from "@tauri-apps/api/core";
 import "./App.css";
+import Webcam from "./components/Webcam";
 
 function App() {
   const [greetMsg, setGreetMsg] = createSignal("");
@@ -53,6 +54,9 @@ function App() {
       </form>
       <button onClick={add}>Add</button>
       <p>{greetMsg()}</p>
+      <hr />
+      <h2>Webcam Feed</h2>
+      <Webcam />
     </main>
   );
 }
