@@ -13,18 +13,23 @@ const Webcam = () => {
     let frameInterval: number | undefined;
     const [devices, setDevices] = createSignal<DeviceInfo[]>([]);
     const [selectedDevice, setSelectedDevice] = createSignal<string>('');
+    const [processing, setProcessing] = createSignal(false);
 
     const captureFrame = async () => {
-        if (videoRef && canvasRef) {
+        if (videoRef && canvasRef && !processing()) {
+            setProcessing(true);
             const context = canvasRef.getContext('2d');
             if (context) {
+                setProcessing(true);
                 canvasRef.width = videoRef.videoWidth;
                 canvasRef.height = videoRef.videoHeight;
                 context.drawImage(videoRef, 0, 0);
                 const frame = canvasRef.toDataURL('image/png');
-                let image_id = await invoke("upload_file", { img: frame })
-                console.log(image_id);
+                const image_id = await invoke("upload_file", { img: frame }) //TODO: エラーハンドリングが必要
+                const colors = await invoke("kmeans", { id: image_id, k: 8 });
+                console.log(colors)
             }
+            setProcessing(false);
         }
     };
 
