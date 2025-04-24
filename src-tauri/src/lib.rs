@@ -1,6 +1,10 @@
 use std::collections::HashMap;
+mod utils;
+use crate::utils::string2vec::string2vec;
 
 const URL_UPLOAD: &str = "http://127.0.0.1:8000/v1/images/upload_base64";
+const URL_KMEANS: &str = "http://127.0.0.1:8000/v1/images/convert/kmeans";
+
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
 fn upload_file(img: String) -> Result<String, u16> {
@@ -27,12 +31,30 @@ fn upload_file(img: String) -> Result<String, u16> {
     let res_json: HashMap<String, String> = serde_json::from_str(&res_text).unwrap();
     Ok(res_json["image_id"].clone())
 }
+#[tauri::command]
+fn kmeans(id: String, k: u8) -> Result<Vec<Vec<i32>>, u16> {
+    let request = HashMap::from([("image_id", id), ("k", k.to_string())]);
+    let client = reqwest::blocking::Client::new();
+    let res = client
+        .post(URL_KMEANS)
+        .header("Content-Type", "application/json")
+        .json(&request)
+        .send()
+        .unwrap();
+    if res.status() != 200 {
+        return Err(res.status().as_u16());
+    }
+    let res_text = res.text().unwrap();
+    let res_json: HashMap<String, String> = serde_json::from_str(&res_text).unwrap();
+
+    Ok(string2vec(&res_json["cluster"]))
+}
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![upload_file])
+        .invoke_handler(tauri::generate_handler![upload_file, kmeans])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
