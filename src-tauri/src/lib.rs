@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 
+const URL_UPLOAD: &str = "http://127.0.0.1:8000/v1/images/upload_base64";
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -17,19 +18,17 @@ fn add(a: i32, b: i32) -> i32 {
 
 #[tauri::command]
 fn upload_file(img: String) -> Result<String, u16> {
-    let url = "http://127.0.0.1:8000/v1/images/upload_base64";
-    let mut request = HashMap::new();
-    let client = reqwest::blocking::Client::new();
-
     // base64プレフィックスを除去
     let img_data = if img.starts_with("data:image/jpeg;base64,") {
         img.replace("data:image/jpeg;base64,", "")
     } else {
         img
     };
-    request.insert("image", img_data);
+
+    let request = HashMap::from([("image", img_data)]);
+    let client = reqwest::blocking::Client::new();
     let res = client
-        .post(url)
+        .post(URL_UPLOAD)
         .header("Content-Type", "application/json")
         .json(&request)
         .send()
