@@ -9,7 +9,7 @@ interface DeviceInfo {
 
 const Webcam = () => {
     const appState = AppState.getInstance();
-    const [imageId, setImageId] = appState.getState("imageId");
+    const [_, setImageId] = appState.getState("imageId");
     let videoRef: HTMLVideoElement | undefined;
     let canvasRef: HTMLCanvasElement | undefined;
     const [error, setError] = createSignal<string | null>(null);

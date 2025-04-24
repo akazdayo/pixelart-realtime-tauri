@@ -3,7 +3,6 @@ import { AppState } from '../utils/states';
 const ConvertedCam = () => {
     const appState = AppState.getInstance();
     const [imageId] = appState.getState("imageId");
-    const [oldImageId, setOldImageId] = appState.getState("oldImageId");
 
     return (
         <div>

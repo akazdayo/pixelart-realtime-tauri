@@ -5,11 +5,8 @@ import ConvertedCam from "./components/ConvertedCam";
 import Webcam from "./components/Webcam";
 
 function App() {
-  console.log("App component rendered");
   const appState = AppState.getInstance();
-  console.log(appState);
   appState.setState("imageId", createSignal(""));
-  appState.setState("oldImageId", createSignal(""));
 
   return (
     <main class="container">
