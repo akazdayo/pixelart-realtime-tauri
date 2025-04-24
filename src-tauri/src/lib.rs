@@ -7,7 +7,7 @@ const URL_KMEANS: &str = "http://127.0.0.1:8000/v1/images/convert/kmeans";
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
-fn upload_file(img: String) -> Result<String, u16> {
+async fn upload_file(img: String) -> Result<String, u16> {
     // base64プレフィックスを除去
     let img_data = if img.starts_with("data:image/png;base64,") {
         img.replace("data:image/png;base64,", "")
@@ -16,36 +16,40 @@ fn upload_file(img: String) -> Result<String, u16> {
     };
 
     let request = HashMap::from([("image", img_data)]);
-    let client = reqwest::blocking::Client::new();
+    let client = reqwest::Client::new();
     let res = client
         .post(URL_UPLOAD)
         .header("Content-Type", "application/json")
         .json(&request)
         .send()
-        .unwrap();
+        .await
+        .map_err(|_| 500u16)?;
 
     if res.status() != 200 {
         return Err(res.status().as_u16());
     }
-    let res_text = res.text().unwrap();
-    let res_json: HashMap<String, String> = serde_json::from_str(&res_text).unwrap();
+    let res_text = res.text().await.map_err(|_| 500u16)?;
+    let res_json: HashMap<String, String> = serde_json::from_str(&res_text).map_err(|_| 500u16)?;
     Ok(res_json["image_id"].clone())
 }
+
 #[tauri::command]
-fn kmeans(id: String, k: u8) -> Result<Vec<Vec<i32>>, u16> {
+async fn kmeans(id: String, k: u8) -> Result<Vec<Vec<i32>>, u16> {
     let request = HashMap::from([("image_id", id), ("k", k.to_string())]);
-    let client = reqwest::blocking::Client::new();
+    let client = reqwest::Client::new();
     let res = client
         .post(URL_KMEANS)
         .header("Content-Type", "application/json")
         .json(&request)
         .send()
-        .unwrap();
+        .await
+        .map_err(|_| 500u16)?;
+
     if res.status() != 200 {
         return Err(res.status().as_u16());
     }
-    let res_text = res.text().unwrap();
-    let res_json: HashMap<String, String> = serde_json::from_str(&res_text).unwrap();
+    let res_text = res.text().await.map_err(|_| 500u16)?;
+    let res_json: HashMap<String, String> = serde_json::from_str(&res_text).map_err(|_| 500u16)?;
 
     Ok(string2vec(&res_json["cluster"]))
 }
