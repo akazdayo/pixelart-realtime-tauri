@@ -1,0 +1,5 @@
+{
+  // MacOS環境でよくある現象で、TauriCLIのビルドとRustAnalyzerのビルドが干渉する
+  // https://github.com/zed-industries/zed/issues/6035
+  "rust-analyzer.cargo.targetDir": "./target-analyzer"
+}

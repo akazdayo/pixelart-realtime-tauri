@@ -15,15 +15,14 @@ const Webcam = () => {
     const [selectedDevice, setSelectedDevice] = createSignal<string>('');
 
     const captureFrame = async () => {
-        console.log("debug")
         if (videoRef && canvasRef) {
             const context = canvasRef.getContext('2d');
             if (context) {
                 canvasRef.width = videoRef.videoWidth;
                 canvasRef.height = videoRef.videoHeight;
                 context.drawImage(videoRef, 0, 0);
-                const base64Data = canvasRef.toDataURL('image/jpeg');
-                let image_id = await invoke("upload_file", { img: base64Data })
+                const frame = canvasRef.toDataURL('image/png');
+                let image_id = await invoke("upload_file", { img: frame })
                 console.log(image_id);
             }
         }
