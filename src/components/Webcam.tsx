@@ -1,5 +1,6 @@
 import { createSignal, onCleanup, onMount, For } from 'solid-js';
 import { invoke } from "@tauri-apps/api/core";
+import { AppState } from '../utils/states';
 
 interface DeviceInfo {
     deviceId: string;
@@ -7,6 +8,8 @@ interface DeviceInfo {
 }
 
 const Webcam = () => {
+    const appState = AppState.getInstance();
+    const [imageId, setImageId] = appState.getState("imageId");
     let videoRef: HTMLVideoElement | undefined;
     let canvasRef: HTMLCanvasElement | undefined;
     const [error, setError] = createSignal<string | null>(null);
@@ -25,9 +28,10 @@ const Webcam = () => {
                 canvasRef.height = videoRef.videoHeight;
                 context.drawImage(videoRef, 0, 0);
                 const frame = canvasRef.toDataURL('image/png');
-                const image_id = await invoke("upload_file", { img: frame }) //TODO: エラーハンドリングが必要
+                const image_id = await invoke("upload_file", { img: frame });
                 const colors = await invoke("kmeans", { id: image_id, k: 8 });
-                console.log(colors)
+                const image = await invoke("get_image", { id: image_id });
+                setImageId(`data:image/png;base64,${image}`);
             }
             setProcessing(false);
         }
@@ -70,7 +74,7 @@ const Webcam = () => {
             if (videoRef) {
                 videoRef.srcObject = stream;
                 videoRef.onloadedmetadata = () => {
-                    frameInterval = window.setInterval(captureFrame, 100);
+                    frameInterval = window.setInterval(captureFrame, 10);
                 };
             }
         } catch (err) {
