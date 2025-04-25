@@ -10,6 +10,7 @@ interface DeviceInfo {
 const Webcam = () => {
     const appState = AppState.getInstance();
     const [_, setImageId] = appState.getState("imageId");
+    const [pixelSize, setPixelSize] = appState.getState("pixelSize");
     let videoRef: HTMLVideoElement | undefined;
     let canvasRef: HTMLCanvasElement | undefined;
     const [error, setError] = createSignal<string | null>(null);
@@ -31,7 +32,7 @@ const Webcam = () => {
                 if (frame.startsWith("data:image/png;base64,")) {
                     frame = frame.replace("data:image/png;base64,", "");
                 }
-                const downscale = await invoke("apply_downscale", { image: frame, size: 64 });
+                const downscale = await invoke("apply_downscale", { image: frame, size: pixelSize() || 128 });
                 const image_id = await invoke("upload_file", { img: downscale });
                 const colors = await invoke("kmeans", { id: image_id, k: 16 });
                 await invoke("apply_colors", { id: image_id, colors: colors });
