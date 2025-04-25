@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 mod utils;
-use crate::utils::mosaic::apply_mosaic_to_base64;
+use utils::cv::to_mat;
+
+use crate::utils::mosaic::{downscale, upscale};
 use crate::utils::string2vec::string2vec;
 
 const URL_UPLOAD: &str = "http://127.0.0.1:8000/v1/images/upload_base64";
@@ -76,15 +78,17 @@ async fn get_image(id: String) -> Result<String, u16> {
 }
 
 #[tauri::command]
-fn apply_mosaic(image: String, size: i32) -> Result<String, String> {
+fn apply_downscale(image: String, size: i32) -> Result<String, String> {
     // base64プレフィックスを除去
-    let img_data = if image.starts_with("data:image/png;base64,") {
-        image.replace("data:image/png;base64,", "")
-    } else {
-        image
-    };
+    let small = downscale(&image, size)?;
+    return Ok(small);
+}
 
-    apply_mosaic_to_base64(&img_data, size)
+#[tauri::command]
+fn apply_upscale(image: String, width: i32, height: i32) -> Result<String, String> {
+    // base64プレフィックスを除去
+    let large = upscale(&image, width, height)?;
+    return Ok(large);
 }
 
 #[tauri::command]
@@ -119,7 +123,8 @@ pub fn run() {
             upload_file,
             kmeans,
             get_image,
-            apply_mosaic,
+            apply_upscale,
+            apply_downscale,
             apply_colors,
         ])
         .run(tauri::generate_context!())

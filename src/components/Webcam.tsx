@@ -27,13 +27,18 @@ const Webcam = () => {
                 canvasRef.width = videoRef.videoWidth;
                 canvasRef.height = videoRef.videoHeight;
                 context.drawImage(videoRef, 0, 0);
-                const frame = canvasRef.toDataURL('image/png');
-                const mosaic = await invoke("apply_mosaic", { image: frame, size: 128 });
-                const image_id = await invoke("upload_file", { img: mosaic });
-                const colors = await invoke("kmeans", { id: image_id, k: 8 });
+                let frame = canvasRef.toDataURL('image/png');
+                if (frame.startsWith("data:image/png;base64,")) {
+                    frame = frame.replace("data:image/png;base64,", "");
+                }
+                const downscale = await invoke("apply_downscale", { image: frame, size: 64 });
+                const image_id = await invoke("upload_file", { img: downscale });
+                const colors = await invoke("kmeans", { id: image_id, k: 16 });
                 await invoke("apply_colors", { id: image_id, colors: colors });
                 const image = await invoke("get_image", { id: image_id });
-                setImageId(`data:image/png;base64,${image}`);
+                console.log(videoRef.videoHeight, videoRef.videoWidth);
+                const upscale = await invoke("apply_upscale", { image: image, width: videoRef.videoWidth, height: videoRef.videoHeight })
+                setImageId(`data:image/png;base64,${upscale}`);
             }
             setProcessing(false);
         }
