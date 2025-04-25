@@ -28,8 +28,10 @@ const Webcam = () => {
                 canvasRef.height = videoRef.videoHeight;
                 context.drawImage(videoRef, 0, 0);
                 const frame = canvasRef.toDataURL('image/png');
-                const image_id = await invoke("upload_file", { img: frame });
+                const mosaic = await invoke("apply_mosaic", { image: frame, size: 128 });
+                const image_id = await invoke("upload_file", { img: mosaic });
                 const colors = await invoke("kmeans", { id: image_id, k: 8 });
+                await invoke("apply_colors", { id: image_id, colors: colors });
                 const image = await invoke("get_image", { id: image_id });
                 setImageId(`data:image/png;base64,${image}`);
             }
