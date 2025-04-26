@@ -32,8 +32,16 @@ const Webcam = () => {
                 if (frame.startsWith("data:image/png;base64,")) {
                     frame = frame.replace("data:image/png;base64,", "");
                 }
+                // モザイク前処理
+                const image_id = await invoke("upload_file", { img: frame });
+                await invoke("apply_saturation", { id: image_id, value: 2 });
+                await invoke("apply_edge", { id: image_id });
+                await invoke("apply_morphology", { id: image_id });
+                frame = await invoke("get_image", { id: image_id });
+
+                // モザイク後
                 const downscale = await invoke("apply_downscale", { image: frame, size: pixelSize() || 128 });
-                const image_id = await invoke("upload_file", { img: downscale });
+                await invoke("set_image", { id: image_id, image: downscale });
                 const colors = await invoke("kmeans", { id: image_id, k: 16 });
                 await invoke("apply_colors", { id: image_id, colors: colors });
                 const image = await invoke("get_image", { id: image_id });
