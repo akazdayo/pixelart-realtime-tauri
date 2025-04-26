@@ -12,6 +12,10 @@ const Webcam = () => {
     const _settings = appState.getState("Settings");
     const [, setImageId] = _settings.imageId;
     const [pixelSize,] = _settings.pixelSize;
+    const [saturation,] = _settings.saturation;
+    const [edge,] = _settings.edge;
+    const [numOfColors,] = _settings.numOfColors;
+    const [morphology,] = _settings.morphology;
     let videoRef: HTMLVideoElement | undefined;
     let canvasRef: HTMLCanvasElement | undefined;
     const [error, setError] = createSignal<string | null>(null);
@@ -35,15 +39,15 @@ const Webcam = () => {
                 }
                 // モザイク前処理
                 const image_id = await invoke("upload_file", { img: frame });
-                await invoke("apply_saturation", { id: image_id, value: 2 });
-                await invoke("apply_edge", { id: image_id });
-                await invoke("apply_morphology", { id: image_id });
+                await invoke("apply_saturation", { id: image_id, value: saturation() || 1 });
+                if (edge()) { await invoke("apply_edge", { id: image_id }); }
+                if (morphology()) { await invoke("apply_morphology", { id: image_id }); };
                 frame = await invoke("get_image", { id: image_id });
 
                 // モザイク後
                 const downscale = await invoke("apply_downscale", { image: frame, size: pixelSize() || 128 });
                 await invoke("set_image", { id: image_id, image: downscale });
-                const colors = await invoke("kmeans", { id: image_id, k: 16 });
+                const colors = await invoke("kmeans", { id: image_id, k: numOfColors() || 8 });
                 await invoke("apply_colors", { id: image_id, colors: colors });
                 const image = await invoke("get_image", { id: image_id });
                 console.log(videoRef.videoHeight, videoRef.videoWidth);

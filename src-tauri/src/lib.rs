@@ -169,7 +169,7 @@ async fn set_image(id: String, image: String) -> Result<(), u16> {
 }
 
 #[tauri::command]
-async fn apply_saturation(id: String, value: i8) -> Result<(), u16> {
+async fn apply_saturation(id: String, value: f32) -> Result<(), u16> {
     let request = HashMap::from([("image_id", id), ("value", value.to_string())]);
     let client = reqwest::Client::new();
     let res = client

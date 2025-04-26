@@ -9,10 +9,10 @@ function App() {
   const appState = AppState.getInstance();
   const _settings = {
     "imageId": createSignal(""),
-    "pixelSize": createSignal(256),
-    "saturation": createSignal(1),
-    "edge": createSignal(false),
-    "morphology": createSignal(false),
+    "pixelSize": createSignal(128),
+    "saturation": createSignal(1.5),
+    "edge": createSignal(true),
+    "morphology": createSignal(true),
     "numOfColors": createSignal(16),
   }
   appState.setState("Settings", _settings);

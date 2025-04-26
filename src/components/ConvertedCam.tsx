@@ -11,7 +11,6 @@ const ConvertedCam = () => {
     const toggleFullScreen = async () => {
         try {
             const mainWindow = Window.getCurrent();
-            const isFullscreen = await mainWindow.isFullscreen();
             const currentFullscreen = await mainWindow.isFullscreen();
             await mainWindow.setFullscreen(!currentFullscreen);
             setIsFullscreen(!currentFullscreen);
