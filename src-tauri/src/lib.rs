@@ -8,6 +8,8 @@ const URL_UPLOAD: &str = "http://127.0.0.1:8000/v1/images/upload_base64";
 const URL_SET: &str = "http://127.0.0.1:8000/v1/images/set";
 const URL_KMEANS: &str = "http://127.0.0.1:8000/v1/images/convert/kmeans";
 const URL_CONVERT: &str = "http://127.0.0.1:8000/v1/images/convert";
+const URL_MEDIAN: &str = "http://127.0.0.1:8000/v1/images/convert/median?image_id=";
+const URL_GAUSSIAN: &str = "http://127.0.0.1:8000/v1/images/convert/gaussian?image_id=";
 const URL_GET_IMAGE: &str = "http://127.0.0.1:8000/v1/images/";
 const URL_DOG: &str = "http://127.0.0.1:8000/v1/images/convert/dog?image_id=";
 const URL_MORPHOLOGY: &str = "http://127.0.0.1:8000/v1/images/convert/morphology?image_id=";
@@ -185,6 +187,36 @@ async fn apply_saturation(id: String, value: f32) -> Result<(), u16> {
     Ok(())
 }
 
+#[tauri::command]
+async fn apply_gaussian(id: String) -> Result<(), u16> {
+    let client = reqwest::Client::new();
+    let res = client
+        .get(format!("{}{}", URL_GAUSSIAN, id))
+        .header("Content-Type", "application/json")
+        .send()
+        .await
+        .unwrap();
+    if res.status() != 200 {
+        return Err(res.status().as_u16());
+    }
+    Ok(())
+}
+
+#[tauri::command]
+async fn apply_median(id: String, size: i8) -> Result<(), u16> {
+    let client = reqwest::Client::new();
+    let res = client
+        .get(format!("{}{}&size={}", URL_MEDIAN, id, size))
+        .header("Content-Type", "application/json")
+        .send()
+        .await
+        .unwrap();
+    if res.status() != 200 {
+        return Err(res.status().as_u16());
+    }
+    Ok(())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -199,7 +231,9 @@ pub fn run() {
             apply_edge,
             set_image,
             apply_morphology,
-            apply_saturation
+            apply_saturation,
+            apply_gaussian,
+            apply_median,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

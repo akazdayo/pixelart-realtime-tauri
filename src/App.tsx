@@ -14,6 +14,8 @@ function App() {
     "edge": createSignal(true),
     "morphology": createSignal(true),
     "numOfColors": createSignal(16),
+    "gaussian": createSignal(true),
+    "median": createSignal(false),
   }
   appState.setState("Settings", _settings);
 

@@ -8,6 +8,8 @@ const Settings = () => {
     const [edge, setEdge] = _settings.edge;
     const [morphology, setMorphology] = _settings.morphology;
     const [numOfColors, setNumOfColors] = _settings.numOfColors;
+    const [gaussian, setGaussian] = _settings.gaussian;
+    const [median, setMedian] = _settings.median;
 
     return (
         <div>
@@ -46,6 +48,24 @@ const Settings = () => {
                     type="checkbox"
                     checked={morphology()}
                     onChange={(e) => setMorphology(e.currentTarget.checked)}
+                />
+            </label>
+            <br />
+            <label>
+                Gaussian:
+                <input
+                    type="checkbox"
+                    checked={gaussian()}
+                    onChange={(e) => setGaussian(e.currentTarget.checked)}
+                />
+            </label>
+            <br />
+            <label>
+                Median:
+                <input
+                    type="checkbox"
+                    checked={median()}
+                    onChange={(e) => setMedian(e.currentTarget.checked)}
                 />
             </label>
             <br />

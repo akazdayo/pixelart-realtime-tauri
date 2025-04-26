@@ -16,6 +16,8 @@ const Webcam = () => {
     const [edge,] = _settings.edge;
     const [numOfColors,] = _settings.numOfColors;
     const [morphology,] = _settings.morphology;
+    const [gaussian,] = _settings.gaussian;
+    const [median,] = _settings.median;
     let videoRef: HTMLVideoElement | undefined;
     let canvasRef: HTMLCanvasElement | undefined;
     const [error, setError] = createSignal<string | null>(null);
@@ -39,6 +41,8 @@ const Webcam = () => {
                 }
                 // モザイク前処理
                 const image_id = await invoke("upload_file", { img: frame });
+                if (gaussian()) { await invoke("apply_gaussian", { id: image_id }); }
+                if (median()) { await invoke("apply_median", { id: image_id, size: 5 }); }
                 await invoke("apply_saturation", { id: image_id, value: saturation() || 1 });
                 if (edge()) { await invoke("apply_edge", { id: image_id }); }
                 if (morphology()) { await invoke("apply_morphology", { id: image_id }); };
