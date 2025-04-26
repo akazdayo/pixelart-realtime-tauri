@@ -12,71 +12,79 @@ const Settings = () => {
     const [median, setMedian] = _settings.median;
 
     return (
-        <div>
+        <div class="settings-container">
             <h2>Settings</h2>
-            <label>
-                Pixel Size:
+            <div class="setting-item">
+                <label for="pixelSize">Pixel Size:</label>
                 <input
+                    id="pixelSize"
                     type="number"
                     value={pixelSize()}
                     onInput={(e) => setPixelSize(parseInt(e.currentTarget.value))}
+                    class="setting-input"
                 />
-            </label>
-            <br />
-            <label>
-                Saturation:
+            </div>
+            <div class="setting-item">
+                <label for="saturation">Saturation:</label>
                 <input
+                    id="saturation"
                     type="number"
                     step="0.1"
                     value={saturation()}
                     onInput={(e) => setSaturation(parseFloat(e.currentTarget.value))}
+                    class="setting-input"
                 />
-            </label>
-            <br />
-            <label>
-                Edge:
+            </div>
+            <div class="setting-item setting-item-checkbox">
+                <label for="edge">Edge:</label>
                 <input
+                    id="edge"
                     type="checkbox"
                     checked={edge()}
                     onChange={(e) => setEdge(e.currentTarget.checked)}
+                    class="setting-checkbox"
                 />
-            </label>
-            <br />
-            <label>
-                Morphology:
+            </div>
+            <div class="setting-item setting-item-checkbox">
+                <label for="morphology">Morphology:</label>
                 <input
+                    id="morphology"
                     type="checkbox"
                     checked={morphology()}
                     onChange={(e) => setMorphology(e.currentTarget.checked)}
+                    class="setting-checkbox"
                 />
-            </label>
-            <br />
-            <label>
-                Gaussian:
+            </div>
+            <div class="setting-item setting-item-checkbox">
+                <label for="gaussian">Gaussian:</label>
                 <input
+                    id="gaussian"
                     type="checkbox"
                     checked={gaussian()}
                     onChange={(e) => setGaussian(e.currentTarget.checked)}
+                    class="setting-checkbox"
                 />
-            </label>
-            <br />
-            <label>
-                Median:
+            </div>
+            <div class="setting-item setting-item-checkbox">
+                <label for="median">Median:</label>
                 <input
+                    id="median"
                     type="checkbox"
                     checked={median()}
                     onChange={(e) => setMedian(e.currentTarget.checked)}
+                    class="setting-checkbox"
                 />
-            </label>
-            <br />
-            <label>
-                Number of Colors:
+            </div>
+            <div class="setting-item">
+                <label for="numOfColors">Number of Colors:</label>
                 <input
+                    id="numOfColors"
                     type="number"
                     value={numOfColors()}
                     onInput={(e) => setNumOfColors(parseInt(e.currentTarget.value))}
+                    class="setting-input"
                 />
-            </label>
+            </div>
         </div>
     )
 }

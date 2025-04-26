@@ -114,3 +114,56 @@ button {
     background-color: #0f0f0f69;
   }
 }
+
+.settings-container {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    max-width: 400px;
+    margin: 20px auto;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.settings-container h2 {
+    text-align: center;
+    margin-top: 0;
+    color: #333;
+}
+
+.setting-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.setting-item label {
+    flex: 1;
+    margin-right: 10px;
+    font-weight: bold;
+    color: #555;
+}
+
+.setting-input {
+    flex: 2;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.setting-item-checkbox {
+    justify-content: space-between;
+}
+
+.setting-checkbox {
+    margin-left: 10px;
+}
+
+.cam-settings-container {
+    display: flex !important;
+    justify-content: center; /* 中央寄せ */
+    align-items: flex-start; /* 上端揃え */
+    gap: 20px; /* 要素間のスペース */
+    flex-wrap: wrap; /* 画面幅が狭い場合に折り返す */
+}

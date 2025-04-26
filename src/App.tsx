@@ -24,8 +24,10 @@ function App() {
       <h2>Original</h2>
 
       <Webcam />
-      <ConvertedCam />
-      <Settings />
+      <div class="cam-settings-container">
+        <ConvertedCam />
+        <Settings />
+      </div>
     </main>
   );
 }

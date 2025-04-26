@@ -24,7 +24,6 @@ const ConvertedCam = () => {
             display: 'flex',
             'flex-direction': 'column',
             'align-items': 'center',
-            width: '100%',
             height: '100%'
         }}>
             {!isFullscreen() && <h2>Converted</h2>}
