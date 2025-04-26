@@ -2,7 +2,8 @@ import { AppState } from '../utils/states';
 
 const ConvertedCam = () => {
     const appState = AppState.getInstance();
-    const [imageId] = appState.getState("imageId");
+    const _settings = appState.getState("Settings");
+    const [imageId,] = _settings.imageId;
 
     return (
         <div>

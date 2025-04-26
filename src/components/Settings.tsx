@@ -2,7 +2,8 @@ import { AppState } from "../utils/states";
 
 const Settings = () => {
     const appState = AppState.getInstance();
-    const [pixelSize, setPixelSize] = appState.getState("pixelSize");
+    const _settings = appState.getState("Settings");
+    const [pixelSize, setPixelSize] = _settings.pixelSize;
 
     return (
         <div>

@@ -7,8 +7,15 @@ import Webcam from "./components/Webcam";
 
 function App() {
   const appState = AppState.getInstance();
-  appState.setState("imageId", createSignal(""));
-  appState.setState("pixelSize", createSignal(256));
+  const _settings = {
+    "imageId": createSignal(""),
+    "pixelSize": createSignal(256),
+    "saturation": createSignal(1),
+    "edge": createSignal(false),
+    "morphology": createSignal(false),
+    "numOfColors": createSignal(16),
+  }
+  appState.setState("Settings", _settings);
 
   return (
     <main class="container">
